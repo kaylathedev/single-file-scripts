@@ -13,13 +13,14 @@ config["directories"]["temp_log_file"] = config["directories"]["temp"] + "/app.l
 config["directories"]["saved_pictures"] = "Security Camera Pictures"
 config["image_source"] = "http://192.168.1.100/snapshot.cgi?user=myusername&pwd=passhere"
 
+# Get the private ip of this computer
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.connect(("192.168.1.211", 80))
+sock.connect(("192.168.1.100", 80))
 computer_private_ip = sock.getsockname()[0]
 sock.close()
 
 config["pre-init-urls"].append("http://192.168.1.100/set_ftp.cgi?cam_user=myusername&cam_pwd=passhere&svr=" + computer_private_ip + "&port=8456&user=myusername&pwd=passhere&dir=a&mode=0")
-#config["post-init-urls"].append("http://192.168.1.211/test_ftp.cgi?user=a&pwd=a12345")
+#config["post-init-urls"].append("http://192.168.1.100/test_ftp.cgi?user=myusername&pwd=passhere")
 
 
 import os
