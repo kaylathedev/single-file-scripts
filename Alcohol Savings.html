@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Alcohol Savings</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<div class="row">
+  <div class="col s12 m6">
+    <h1>Alcohol Savings</h1>
+    <p>Use the form below to figure out how it'll cost you to get drunk.</p>
+    <p>The savings will appear when you click the button. The lower the number, the more you save.</p>
+    <form onsubmit="calculateDrunkness(event);">
+      <div class="input-field">
+        <input id="bottle-cost" type="number" name="cost" step="0.01">
+        <label for="bottle-cost">Price of bottle</label>
+      </div>
+      <div class="input-field">
+        <input id="bottle-volume" type="number" name="volume" step="0.001">
+        <label for="bottle-volume">Volume of bottle (in milliters)</label>
+      </div>
+      <div class="input-field">
+        <input id="bottle-percentage" type="number" name="percent" step="0.01">
+        <label for="bottle-percentage">Alcohol Percentage (if given the proof, then halve it, and give that number to me)</label>
+      </div>
+      <button class="btn waves-effect waves-light" type="submit">How cheap am I?</button>
+    </form>
+  </div>
+  <div class="col s12 m6">
+    <div id="results"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script type="text/javascript">
+let calculateDrunkness = (event) => {
+  event.preventDefault();
+  let cost = parseFloat(event.target.cost.value); // dollars
+  let volume = parseFloat(event.target.volume.value); // milliters
+  let percent = parseFloat(event.target.percent.value); // percent alcohol by volume
+  // we are looking for the pennies per gram of alcohol
+
+  // density of ethanol = 789 kg/m^3.
+  // The density needs to be in grams per milliters. Let's go to WolframAlpha.com!
+  // https://www.wolframalpha.com/input/?i=789+kg+%2F+m%5E3+to+grams+per+mL
+  // density of ethanol = 0.789 g/L
+
+  // volume of alcohol in bottle = alcohol percentage * volume of bottle
+  // mass of alcohol in bottle = density of ethanol (mass / volume) * volume of alcohol in bottle
+  // cost of alcohol in $ / grams = cost of bottle / mass of alcohol in bottle
+
+  let density = 0.789; // grams per milliter
+  let alcohol_volume = percent / 100 * volume; // milliters
+  let alcohol_mass = alcohol_volume * density; // grams
+  let alcohol_unit_cost = cost / alcohol_mass; // dollars per gram
+  let alcohol_unit_cost_pennies = alcohol_unit_cost * 100;
+  let result = document.getElementById('results');
+  let description = volume + ' mL, ' + percent + '% at $' + cost;
+  result.innerHTML += Math.round(alcohol_unit_cost_pennies * 10) / 10 + ' pennies per gram of alcohol (' + description + ')<br>';
+};
+</script>
+</body>
+</html>
